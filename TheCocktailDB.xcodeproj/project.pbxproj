@@ -7,19 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CEA31C002AF240C100127EBA /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA31BFF2AF240C100127EBA /* NetworkManager.swift */; };
+		CEA31C032AF2445300127EBA /* Cocktail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA31C022AF2445300127EBA /* Cocktail.swift */; };
+		CEA31C052AF2710C00127EBA /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA31C042AF2710C00127EBA /* ImageManager.swift */; };
+		CEA31C082AF276B300127EBA /* CocktailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA31C072AF276B300127EBA /* CocktailCell.swift */; };
+		CEABF9422AF0EF1B0096E71E /* CocktailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEABF9412AF0EF1B0096E71E /* CocktailsViewController.swift */; };
 		CEB279482AEFA7FD0055A956 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB279472AEFA7FD0055A956 /* AppDelegate.swift */; };
 		CEB2794A2AEFA7FD0055A956 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB279492AEFA7FD0055A956 /* SceneDelegate.swift */; };
-		CEB2794C2AEFA7FD0055A956 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB2794B2AEFA7FD0055A956 /* ViewController.swift */; };
+		CEB2794C2AEFA7FD0055A956 /* InfoCocktailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB2794B2AEFA7FD0055A956 /* InfoCocktailViewController.swift */; };
 		CEB2794F2AEFA7FD0055A956 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEB2794D2AEFA7FD0055A956 /* Main.storyboard */; };
 		CEB279512AEFA7FF0055A956 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEB279502AEFA7FF0055A956 /* Assets.xcassets */; };
 		CEB279542AEFA7FF0055A956 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEB279522AEFA7FF0055A956 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CEA31BFF2AF240C100127EBA /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		CEA31C022AF2445300127EBA /* Cocktail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cocktail.swift; sourceTree = "<group>"; };
+		CEA31C042AF2710C00127EBA /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
+		CEA31C072AF276B300127EBA /* CocktailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocktailCell.swift; sourceTree = "<group>"; };
+		CEABF9412AF0EF1B0096E71E /* CocktailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocktailsViewController.swift; sourceTree = "<group>"; };
 		CEB279442AEFA7FD0055A956 /* TheCocktailDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TheCocktailDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEB279472AEFA7FD0055A956 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEB279492AEFA7FD0055A956 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		CEB2794B2AEFA7FD0055A956 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		CEB2794B2AEFA7FD0055A956 /* InfoCocktailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCocktailViewController.swift; sourceTree = "<group>"; };
 		CEB2794E2AEFA7FD0055A956 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CEB279502AEFA7FF0055A956 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEB279532AEFA7FF0055A956 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -37,6 +47,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CEA31C012AF2442A00127EBA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CEA31C022AF2445300127EBA /* Cocktail.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CEA31C062AF2768700127EBA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CEA31C072AF276B300127EBA /* CocktailCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CEABF9432AF0F58F0096E71E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				CEA31BFF2AF240C100127EBA /* NetworkManager.swift */,
+				CEA31C042AF2710C00127EBA /* ImageManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		CEB2793B2AEFA7FD0055A956 = {
 			isa = PBXGroup;
 			children = (
@@ -56,15 +91,43 @@
 		CEB279462AEFA7FD0055A956 /* TheCocktailDB */ = {
 			isa = PBXGroup;
 			children = (
-				CEB279472AEFA7FD0055A956 /* AppDelegate.swift */,
-				CEB279492AEFA7FD0055A956 /* SceneDelegate.swift */,
-				CEB2794B2AEFA7FD0055A956 /* ViewController.swift */,
-				CEB2794D2AEFA7FD0055A956 /* Main.storyboard */,
+				CEA31C062AF2768700127EBA /* Views */,
+				CEA31C012AF2442A00127EBA /* Models */,
+				CEABF9432AF0F58F0096E71E /* Services */,
+				CEB2795D2AEFAC6A0055A956 /* App */,
+				CEB2795C2AEFAC4B0055A956 /* ViewControllers */,
+				CEB2795B2AEFAC370055A956 /* Storyboards */,
 				CEB279502AEFA7FF0055A956 /* Assets.xcassets */,
-				CEB279522AEFA7FF0055A956 /* LaunchScreen.storyboard */,
-				CEB279552AEFA7FF0055A956 /* Info.plist */,
 			);
 			path = TheCocktailDB;
+			sourceTree = "<group>";
+		};
+		CEB2795B2AEFAC370055A956 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				CEB2794D2AEFA7FD0055A956 /* Main.storyboard */,
+				CEB279522AEFA7FF0055A956 /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		CEB2795C2AEFAC4B0055A956 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				CEABF9412AF0EF1B0096E71E /* CocktailsViewController.swift */,
+				CEB2794B2AEFA7FD0055A956 /* InfoCocktailViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		CEB2795D2AEFAC6A0055A956 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				CEB279472AEFA7FD0055A956 /* AppDelegate.swift */,
+				CEB279492AEFA7FD0055A956 /* SceneDelegate.swift */,
+				CEB279552AEFA7FF0055A956 /* Info.plist */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,9 +201,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEB2794C2AEFA7FD0055A956 /* ViewController.swift in Sources */,
+				CEABF9422AF0EF1B0096E71E /* CocktailsViewController.swift in Sources */,
+				CEB2794C2AEFA7FD0055A956 /* InfoCocktailViewController.swift in Sources */,
+				CEA31C052AF2710C00127EBA /* ImageManager.swift in Sources */,
+				CEA31C002AF240C100127EBA /* NetworkManager.swift in Sources */,
 				CEB279482AEFA7FD0055A956 /* AppDelegate.swift in Sources */,
 				CEB2794A2AEFA7FD0055A956 /* SceneDelegate.swift in Sources */,
+				CEA31C032AF2445300127EBA /* Cocktail.swift in Sources */,
+				CEA31C082AF276B300127EBA /* CocktailCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,7 +357,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = EZEA8LL4D8;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TheCocktailDB/Info.plist;
+				INFOPLIST_FILE = TheCocktailDB/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -317,7 +385,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = EZEA8LL4D8;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TheCocktailDB/Info.plist;
+				INFOPLIST_FILE = TheCocktailDB/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
