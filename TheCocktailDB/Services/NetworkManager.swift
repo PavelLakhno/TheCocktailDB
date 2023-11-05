@@ -54,11 +54,11 @@ final class NetworkManager {
         DispatchQueue.global().async {
             guard let imageData = try? Data(contentsOf: url) else {
                 completion(.failure(.noData))
-                return
-            }
+                return }
             DispatchQueue.main.async {
                 completion(.success(imageData))
             }
         }
     }
+    
 }

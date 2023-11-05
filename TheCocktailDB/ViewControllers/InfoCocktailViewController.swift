@@ -15,10 +15,8 @@ class InfoCocktailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         
-        
-        ImageManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self]
+        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self]
             result in
             switch result {
             case .success(let image):
@@ -28,9 +26,6 @@ class InfoCocktailViewController: UIViewController {
                 print(error)
             }
         }
-        
     }
-
-
 }
 

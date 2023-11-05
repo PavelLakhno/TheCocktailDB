@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		CEA31C002AF240C100127EBA /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA31BFF2AF240C100127EBA /* NetworkManager.swift */; };
 		CEA31C032AF2445300127EBA /* Cocktail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA31C022AF2445300127EBA /* Cocktail.swift */; };
-		CEA31C052AF2710C00127EBA /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA31C042AF2710C00127EBA /* ImageManager.swift */; };
 		CEA31C082AF276B300127EBA /* CocktailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA31C072AF276B300127EBA /* CocktailCell.swift */; };
 		CEABF9422AF0EF1B0096E71E /* CocktailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEABF9412AF0EF1B0096E71E /* CocktailsViewController.swift */; };
 		CEB279482AEFA7FD0055A956 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB279472AEFA7FD0055A956 /* AppDelegate.swift */; };
@@ -23,7 +22,6 @@
 /* Begin PBXFileReference section */
 		CEA31BFF2AF240C100127EBA /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		CEA31C022AF2445300127EBA /* Cocktail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cocktail.swift; sourceTree = "<group>"; };
-		CEA31C042AF2710C00127EBA /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		CEA31C072AF276B300127EBA /* CocktailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocktailCell.swift; sourceTree = "<group>"; };
 		CEABF9412AF0EF1B0096E71E /* CocktailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocktailsViewController.swift; sourceTree = "<group>"; };
 		CEB279442AEFA7FD0055A956 /* TheCocktailDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TheCocktailDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,7 +65,6 @@
 			isa = PBXGroup;
 			children = (
 				CEA31BFF2AF240C100127EBA /* NetworkManager.swift */,
-				CEA31C042AF2710C00127EBA /* ImageManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -203,7 +200,6 @@
 			files = (
 				CEABF9422AF0EF1B0096E71E /* CocktailsViewController.swift in Sources */,
 				CEB2794C2AEFA7FD0055A956 /* InfoCocktailViewController.swift in Sources */,
-				CEA31C052AF2710C00127EBA /* ImageManager.swift in Sources */,
 				CEA31C002AF240C100127EBA /* NetworkManager.swift in Sources */,
 				CEB279482AEFA7FD0055A956 /* AppDelegate.swift in Sources */,
 				CEB2794A2AEFA7FD0055A956 /* SceneDelegate.swift in Sources */,
