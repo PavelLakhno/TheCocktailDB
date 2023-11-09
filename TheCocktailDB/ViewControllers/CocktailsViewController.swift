@@ -13,28 +13,31 @@ class CocktailsViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tableView.register(CocktailCell.self, forCellReuseIdentifier: CocktailCell.cellID)
+        tableView.rowHeight = 100
         fetchProduct()
     }
+}
 
-    // MARK: - TableViewDataSource
+// MARK: UITableViewDataSource
+extension CocktailsViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cocktails.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: CocktailCell.cellID, for: indexPath)
         guard let cell = cell as? CocktailCell else { return UITableViewCell() }
         cell.configure(with: cocktails[indexPath.row])
         return cell
     }
-   
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let infoCocktailVC = segue.destination as? InfoCocktailViewController
-        guard let indexPath = tableView.indexPathForSelectedRow else { return }
-        infoCocktailVC?.cocktail = cocktails[indexPath.row]
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        let infoCocktailVC = InfoCocktailViewController()
+        infoCocktailVC.cocktail = cocktails[indexPath.row]
+        navigationController?.pushViewController(infoCocktailVC, animated: true)
     }
-
 }
 
 // MARK: API request
