@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  TheCocktailDB
 //
-//  Created by user on 30.10.2023.
+//  Created by Pavel Lakhno on 30.10.2023.
 //
 
 import UIKit

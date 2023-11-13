@@ -2,7 +2,7 @@
 //  InfoCocktailViewController.swift
 //  TheCocktailDB
 //
-//  Created by user on 30.10.2023.
+//  Created by Pavel Lakhno on 30.10.2023.
 //
 
 import UIKit
@@ -55,7 +55,6 @@ class InfoCocktailViewController: UIViewController {
     }()
     
     var cocktail: Cocktail!
-    
     private var isFavorite = false
     
     override func viewDidLoad() {
@@ -67,8 +66,57 @@ class InfoCocktailViewController: UIViewController {
 
         loadFavoriteStatus()
         fetchImage()
-        createStackLabels()
+        createIngridientStackLabels()
         setupConstraints()
+    }
+
+    // MARK: - Actions
+    @objc func toggleFavorite(_ sender: UIButton) {
+        isFavorite.toggle()
+        setImageForFavoriteButton()
+        DataManager.shared.saveFavoriteStatus(for: cocktail.strDrink, with: isFavorite)
+    }
+    
+    // MARK: - Private Methods
+    private func setImageForFavoriteButton() {
+        favoriteButton.tintColor = isFavorite ? .red : .white
+    }
+    
+    private func loadFavoriteStatus() {
+        isFavorite = DataManager.shared.loadFavoriteStatus(for: cocktail.strDrink)
+    }
+    
+    private func createIngridientStackLabels() {
+        let ingridients = cocktail.getIngredients()
+        let measures = cocktail.getMeasures()
+        
+        for i in 0...ingridients.count-1 {
+            if ingridients[i] != nil {
+                
+                let stackView = UIStackView()
+                stackView.translatesAutoresizingMaskIntoConstraints = false
+                stackView.axis = .horizontal
+                stackView.distribution = .fillProportionally
+                stackView.spacing = 5
+                
+                let ingridientLabel = UILabel()
+                ingridientLabel.translatesAutoresizingMaskIntoConstraints = false
+                ingridientLabel.textAlignment = .left
+                ingridientLabel.font = .monospacedDigitSystemFont(ofSize: 15, weight: .medium)
+                ingridientLabel.numberOfLines = 0
+                ingridientLabel.text = ingridients[i]
+                
+                let measureLabel = UILabel()
+                measureLabel.translatesAutoresizingMaskIntoConstraints = false
+                measureLabel.textAlignment = .right
+                measureLabel.font = .italicSystemFont(ofSize: 15)
+                measureLabel.numberOfLines = 0
+                measureLabel.text = measures[i] != nil ? measures[i] : ""
+                
+                stackView.addArrangedSubviews(ingridientLabel, measureLabel)
+                ingridientsStackView.addArrangedSubview(stackView)
+            } else { return }
+        }
     }
     
     private func setupConstraints() {
@@ -96,55 +144,6 @@ class InfoCocktailViewController: UIViewController {
             ingridientsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             ingridientsStackView.heightAnchor.constraint(equalToConstant: 150)
         ])
-    }
-    
-    // MARK: - Actions
-    @objc func toggleFavorite(_ sender: UIButton) {
-        isFavorite.toggle()
-        setImageForFavoriteButton()
-        DataManager.shared.saveFavoriteStatus(for: cocktail.strDrink, with: isFavorite)
-    }
-    
-    // MARK: - Private Methods
-    private func setImageForFavoriteButton() {
-        favoriteButton.tintColor = isFavorite ? .red : .white
-    }
-    
-    private func loadFavoriteStatus() {
-        isFavorite = DataManager.shared.loadFavoriteStatus(for: cocktail.strDrink)
-    }
-    
-    private func createStackLabels() {
-        let ingridients = cocktail.getIngredients()
-        let measures = cocktail.getMeasures()
-        
-        for i in 0...ingridients.count-1 {
-            if ingridients[i] != nil {
-                
-                let stackView = UIStackView()
-                stackView.translatesAutoresizingMaskIntoConstraints = false
-                stackView.axis = .horizontal
-                stackView.distribution = .fillProportionally
-                stackView.spacing = 5
-                
-                let ingridientLabel = UILabel()
-                ingridientLabel.translatesAutoresizingMaskIntoConstraints = false
-                ingridientLabel.textAlignment = .left
-                ingridientLabel.font = .boldSystemFont(ofSize: 15)
-                ingridientLabel.numberOfLines = 0
-                ingridientLabel.text = ingridients[i]
-                
-                let measureLabel = UILabel()
-                measureLabel.translatesAutoresizingMaskIntoConstraints = false
-                measureLabel.textAlignment = .right
-                measureLabel.font = .italicSystemFont(ofSize: 15)
-                measureLabel.numberOfLines = 0
-                measureLabel.text = measures[i] != nil ? measures[i] : ""
-                
-                stackView.addArrangedSubviews(ingridientLabel, measureLabel)
-                ingridientsStackView.addArrangedSubview(stackView)
-            } else { return }
-        }
     }
 }
 
