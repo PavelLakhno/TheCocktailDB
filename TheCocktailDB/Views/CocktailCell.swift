@@ -69,7 +69,7 @@ class CocktailCell: UITableViewCell {
     func configure(with cocktail: Cocktail) {
         self.mainLabel.text = cocktail.strDrink
         self.secondaryLabel.text = cocktail.strAlcoholic
-        
+          
         NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self] result in
             switch result {
             case .success(let image):
@@ -89,9 +89,9 @@ class CocktailCell: UITableViewCell {
             imageCocktailView.widthAnchor.constraint(equalTo: contentView.heightAnchor, constant: -10),
             imageCocktailView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -10),
             
-            labelsStackView.leadingAnchor.constraint(equalTo: imageCocktailView.trailingAnchor, constant: 20),
             labelsStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            labelsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+            labelsStackView.leadingAnchor.constraint(equalTo: imageCocktailView.trailingAnchor, constant: 20),
+            labelsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             labelsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
             
             activityIndicator.centerXAnchor.constraint(equalTo: imageCocktailView.centerXAnchor),
@@ -99,16 +99,4 @@ class CocktailCell: UITableViewCell {
         ])
     }
 }
-// MARK: UIView + extention
-extension UIView {
-    func addSubviews(_ views: UIView...) {
-        views.forEach {(addSubview($0))}
-    }
-}
 
-// MARK: UIStackView + extention
-extension UIStackView {
-    func addArrangedSubviews(_ views: UIView...) {
-        views.forEach {(addArrangedSubview($0))}
-    }
-}
