@@ -9,22 +9,18 @@ import Foundation
 
 protocol CocktailDetailsViewModelProtocol {
     var instruction: String { get }
-    var imageData: Data? { get }
     var isFavorite: Bool { get }
     var ingridients: [String?] { get }
     var measures: [String?] { get }
     var viewModelDidChange: ((CocktailDetailsViewModelProtocol) -> Void)? { get set }
     init(cocktail: Cocktail)
     func favoriteButtonPressed()
+    func fetchImageCocktail(completion: @escaping (Data) -> Void)
 }
 
 class CocktailDetailsViewModel: CocktailDetailsViewModelProtocol {
      var instruction: String {
         cocktail.strInstructions
-    }
-    
-    var imageData: Data? {
-        NetworkManager.shared.fetchImageData(from: cocktail.strDrinkThumb)
     }
     
     var isFavorite: Bool {
@@ -54,5 +50,16 @@ class CocktailDetailsViewModel: CocktailDetailsViewModelProtocol {
     
     func favoriteButtonPressed() {
         isFavorite.toggle()
+    }
+    
+    func fetchImageCocktail(completion: @escaping (Data) -> Void) {
+        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { result in
+            switch result {
+            case .success(let data):
+                completion(data)
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
 }

@@ -54,26 +54,11 @@ class CocktailDetailsViewController: UIViewController {
         return activIndicator
     }()
     
-    var viewModel: CocktailDetailsViewModelProtocol! {
-        didSet {
-            viewModel.viewModelDidChange = { [unowned self] viewModel in
-                setImageForFavoriteButton(viewModel.isFavorite)
-            }
-            instructionLabel.text = viewModel.instruction
-            imageCocktailView.image = UIImage(data: viewModel.imageData ?? Data())
-            activityIndicator.stopAnimating()
-        }
-    }
+    var viewModel: CocktailDetailsViewModelProtocol!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubviews(imageCocktailView, favoriteButton, instructionLabel, ingridientsStackView)
-        view.backgroundColor = .white
-        imageCocktailView.addSubview(activityIndicator)
-        
-        setImageForFavoriteButton(viewModel.isFavorite)
-        createIngridientStackLabels()
-        setupConstraints()
+        setupUI()
     }
 
     // MARK: - Actions
@@ -86,7 +71,6 @@ class CocktailDetailsViewController: UIViewController {
         favoriteButton.tintColor = status ? .red : .white
     }
 
-    
     private func createIngridientStackLabels() {
         let ingridients = viewModel.ingridients
         let measures = viewModel.measures
@@ -145,6 +129,25 @@ class CocktailDetailsViewController: UIViewController {
             ingridientsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             ingridientsStackView.heightAnchor.constraint(equalToConstant: 150)
         ])
+    }
+    
+    private func setupUI() {
+        view.addSubviews(imageCocktailView, favoriteButton, instructionLabel, ingridientsStackView)
+        view.backgroundColor = .white
+        imageCocktailView.addSubview(activityIndicator)
+        setImageForFavoriteButton(viewModel.isFavorite)
+        createIngridientStackLabels()
+        setupConstraints()
+        
+        viewModel.viewModelDidChange = { [unowned self] viewModel in
+            setImageForFavoriteButton(viewModel.isFavorite)
+        }
+        
+        instructionLabel.text = viewModel.instruction
+        viewModel.fetchImageCocktail { [unowned self] imageData in
+            self.imageCocktailView.image = UIImage(data: imageData)
+            self.activityIndicator.stopAnimating()
+        }
     }
 }
 

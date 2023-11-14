@@ -22,7 +22,6 @@ class CocktailListViewController: UITableViewController {
         tableView.register(CocktailCell.self, forCellReuseIdentifier: CocktailCell.cellID)
         tableView.rowHeight = 100
     }
-
 }
 
 // MARK: UITableViewDataSource
