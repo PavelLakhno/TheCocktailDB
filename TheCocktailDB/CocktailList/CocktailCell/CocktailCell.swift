@@ -51,6 +51,18 @@ class CocktailCell: UITableViewCell {
         activityIndicator.hidesWhenStopped = true
         return activityIndicator
     }()
+    
+    var viewModel: CocktailCellViewModelProtocol! {
+        didSet {
+            self.mainLabel.text = viewModel.cocktailName
+            self.secondaryLabel.text = viewModel.cocktailAlchohol
+            
+            viewModel.fetchImageCocktail { [unowned self] imageData in
+                self.imageCocktailView.image = UIImage(data: imageData)
+                self.activityIndicator.stopAnimating()
+            }
+        }
+    }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -69,21 +81,6 @@ class CocktailCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageCocktailView.image = nil
-    }
-   
-    func configure(with cocktail: Cocktail) {
-        self.mainLabel.text = cocktail.strDrink
-        self.secondaryLabel.text = cocktail.strAlcoholic
-          
-        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self] result in
-            switch result {
-            case .success(let image):
-                self?.imageCocktailView.image = UIImage(data: image)
-                self?.activityIndicator.stopAnimating()
-            case .failure(let error):
-                print(error)
-            }
-        }
     }
     
     private func setConstraints() {

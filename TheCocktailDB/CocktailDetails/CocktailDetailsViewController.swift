@@ -1,5 +1,5 @@
 //
-//  InfoCocktailViewController.swift
+//  CocktailDetailsViewController.swift
 //  TheCocktailDB
 //
 //  Created by Pavel Lakhno on 30.10.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class InfoCocktailViewController: UIViewController {
+class CocktailDetailsViewController: UIViewController {
     
     private lazy var imageCocktailView: UIImageView = {
         let imageView = UIImageView()
@@ -54,41 +54,42 @@ class InfoCocktailViewController: UIViewController {
         return activIndicator
     }()
     
-    var cocktail: Cocktail!
-    private var isFavorite = false
-    
+    var viewModel: CocktailDetailsViewModelProtocol! {
+        didSet {
+            viewModel.viewModelDidChange = { [unowned self] viewModel in
+                setImageForFavoriteButton(viewModel.isFavorite)
+            }
+            instructionLabel.text = viewModel.instruction
+            imageCocktailView.image = UIImage(data: viewModel.imageData ?? Data())
+            activityIndicator.stopAnimating()
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubviews(imageCocktailView, favoriteButton, instructionLabel, ingridientsStackView)
         view.backgroundColor = .white
         imageCocktailView.addSubview(activityIndicator)
-        instructionLabel.text = cocktail.strInstructions
-
-        loadFavoriteStatus()
-        fetchImage()
+        
+        setImageForFavoriteButton(viewModel.isFavorite)
         createIngridientStackLabels()
         setupConstraints()
     }
 
     // MARK: - Actions
     @objc func toggleFavorite(_ sender: UIButton) {
-        isFavorite.toggle()
-        setImageForFavoriteButton()
-        DataManager.shared.saveFavoriteStatus(for: cocktail.strDrink, with: isFavorite)
+        viewModel.favoriteButtonPressed()
     }
     
     // MARK: - Private Methods
-    private func setImageForFavoriteButton() {
-        favoriteButton.tintColor = isFavorite ? .red : .white
+    private func setImageForFavoriteButton(_ status: Bool) {
+        favoriteButton.tintColor = status ? .red : .white
     }
-    
-    private func loadFavoriteStatus() {
-        isFavorite = DataManager.shared.loadFavoriteStatus(for: cocktail.strDrink)
-    }
+
     
     private func createIngridientStackLabels() {
-        let ingridients = cocktail.getIngredients()
-        let measures = cocktail.getMeasures()
+        let ingridients = viewModel.ingridients
+        let measures = viewModel.measures
         
         for i in 0...ingridients.count-1 {
             if ingridients[i] != nil {
@@ -147,18 +148,3 @@ class InfoCocktailViewController: UIViewController {
     }
 }
 
-extension InfoCocktailViewController {
-    private func fetchImage() {
-        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self]
-            result in
-            switch result {
-            case .success(let image):
-                self?.imageCocktailView.image = UIImage(data: image)
-                self?.activityIndicator.stopAnimating()
-                self?.setImageForFavoriteButton()
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-}
