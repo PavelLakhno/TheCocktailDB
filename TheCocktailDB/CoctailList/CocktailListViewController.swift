@@ -1,5 +1,5 @@
 //
-//  CocktailsViewController.swift
+//  CocktailListViewController.swift
 //  TheCocktailDB
 //
 //  Created by Pavel Lakhno on 31.10.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CocktailsViewController: UITableViewController {
+class CocktailListViewController: UITableViewController {
     
     private var cocktails: [Cocktail] = []
 
@@ -20,7 +20,7 @@ class CocktailsViewController: UITableViewController {
 }
 
 // MARK: UITableViewDataSource
-extension CocktailsViewController {
+extension CocktailListViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cocktails.count
     }
@@ -34,14 +34,14 @@ extension CocktailsViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        let infoCocktailVC = InfoCocktailViewController()
+        let infoCocktailVC = CocktailDetailsViewController()
         infoCocktailVC.cocktail = cocktails[indexPath.row]
         navigationController?.pushViewController(infoCocktailVC, animated: true)
     }
 }
 
 // MARK: API request
-extension CocktailsViewController {
+extension CocktailListViewController {
     
     private func fetchProduct() {
         NetworkManager.shared.fetchCocktails(from: Link.cocktailsURL.rawValue) { [weak self]

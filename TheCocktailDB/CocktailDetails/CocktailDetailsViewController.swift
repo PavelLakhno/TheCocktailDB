@@ -1,5 +1,5 @@
 //
-//  InfoCocktailViewController.swift
+//  CocktailDetailsViewController.swift
 //  TheCocktailDB
 //
 //  Created by Pavel Lakhno on 30.10.2023.
@@ -7,7 +7,19 @@
 
 import UIKit
 
-class InfoCocktailViewController: UIViewController {
+protocol CocktailDetailsViewInputProtocol: AnyObject {
+    func displayCocktailInstruction(with text: String)
+    func displayCocktailIngridients(_ ingridients: [String], and measures: [String])
+
+}
+
+protocol CocktailDetailsViewOutputProtocol {
+    init(view: CocktailDetailsViewInputProtocol)
+    func showDetails()
+}
+
+
+class CocktailDetailsViewController: UIViewController {
     
     private lazy var imageCocktailView: UIImageView = {
         let imageView = UIImageView()
@@ -55,19 +67,24 @@ class InfoCocktailViewController: UIViewController {
     }()
     
     var cocktail: Cocktail!
+    var presenter: CocktailDetailsViewOutputProtocol!
+    var configurator: CocktailDetailsConfiguratorInputProtocol = CocktailDetailsConfigurator()
+    
     private var isFavorite = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configurator.configure(withView: self, and: cocktail)
         view.addSubviews(imageCocktailView, favoriteButton, instructionLabel, ingridientsStackView)
         view.backgroundColor = .white
         imageCocktailView.addSubview(activityIndicator)
-        instructionLabel.text = cocktail.strInstructions
+        //instructionLabel.text = cocktail.strInstructions
 
         loadFavoriteStatus()
         fetchImage()
         createIngridientStackLabels()
         setupConstraints()
+        presenter.showDetails()
     }
 
     // MARK: - Actions
@@ -147,7 +164,7 @@ class InfoCocktailViewController: UIViewController {
     }
 }
 
-extension InfoCocktailViewController {
+extension CocktailDetailsViewController {
     private func fetchImage() {
         NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self]
             result in
@@ -161,4 +178,45 @@ extension InfoCocktailViewController {
             }
         }
     }
+}
+
+extension CocktailDetailsViewController: CocktailDetailsViewInputProtocol {
+
+    func displayCocktailInstruction(with text: String) {
+        instructionLabel.text = text
+    }
+    
+    func displayCocktailIngridients(_ ingridients: [String], and measures: [String]) {
+        let ingridients = ingridients
+        let measures = measures
+        
+        for i in 0...ingridients.count-1 {
+            if ingridients[i] != nil {
+                
+                let stackView = UIStackView()
+                stackView.translatesAutoresizingMaskIntoConstraints = false
+                stackView.axis = .horizontal
+                stackView.distribution = .fillProportionally
+                stackView.spacing = 5
+                
+                let ingridientLabel = UILabel()
+                ingridientLabel.translatesAutoresizingMaskIntoConstraints = false
+                ingridientLabel.textAlignment = .left
+                ingridientLabel.font = .monospacedDigitSystemFont(ofSize: 15, weight: .medium)
+                ingridientLabel.numberOfLines = 0
+                ingridientLabel.text = ingridients[i]
+                
+                let measureLabel = UILabel()
+                measureLabel.translatesAutoresizingMaskIntoConstraints = false
+                measureLabel.textAlignment = .right
+                measureLabel.font = .italicSystemFont(ofSize: 15)
+                measureLabel.numberOfLines = 0
+                measureLabel.text = measures[i] != nil ? measures[i] : ""
+                
+                stackView.addArrangedSubviews(ingridientLabel, measureLabel)
+                ingridientsStackView.addArrangedSubview(stackView)
+            } else { return }
+        }
+    }
+    
 }
