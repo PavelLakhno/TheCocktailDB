@@ -7,8 +7,18 @@
 
 import UIKit
 
-class CocktailCell: UITableViewCell {
-    static let cellID = "Cell"
+protocol CellModelRepresentable {
+    var viewModel: CocktailCellViewModelProtocol? { get }
+}
+
+class CocktailCell: UITableViewCell, CellModelRepresentable {
+    var viewModel: CocktailCellViewModelProtocol? {
+        didSet {
+            updateView()
+        }
+    }
+    
+//    static let cellID = "Cell"
     
     private lazy var labelsStackView: UIStackView = {
         let view = UIStackView()
@@ -71,18 +81,27 @@ class CocktailCell: UITableViewCell {
         imageCocktailView.image = nil
     }
    
-    func configure(with cocktail: Cocktail) {
-        self.mainLabel.text = cocktail.strDrink
-        self.secondaryLabel.text = cocktail.strAlcoholic
-          
-        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self] result in
-            switch result {
-            case .success(let image):
-                self?.imageCocktailView.image = UIImage(data: image)
-                self?.activityIndicator.stopAnimating()
-            case .failure(let error):
-                print(error)
-            }
+//    func configure(with cocktail: Cocktail) {
+//        self.mainLabel.text = cocktail.strDrink
+//        self.secondaryLabel.text = cocktail.strAlcoholic
+//          
+//        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self] result in
+//            switch result {
+//            case .success(let image):
+//                self?.imageCocktailView.image = UIImage(data: image)
+//                self?.activityIndicator.stopAnimating()
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+//    }
+    
+    private func updateView() {
+        guard let viewModel = viewModel as? CocktailCellViewModel else { return }
+        self.mainLabel.text = viewModel.cocktailName
+        self.secondaryLabel.text = viewModel.cocktailAlchoholic
+        if let imageData = viewModel.imageData {
+            self.imageCocktailView.image = UIImage(data: imageData)
         }
     }
     

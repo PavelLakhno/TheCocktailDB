@@ -7,36 +7,56 @@
 
 import UIKit
 
+protocol CocktailListViewInputProtocol: AnyObject {
+    func reloadData(for section: CocktailSectionViewModel)
+//    func display(cocktails: [Cocktail])
+}
+
+protocol CocktailListViewOutputProtocol {
+    init(view: CocktailListViewInputProtocol)
+    func viewDidLoad()
+//    func didTapCell(at indexPath: IndexPath)
+}
+
 class CocktailListViewController: UITableViewController {
-    
+    var presenter: CocktailListViewOutputProtocol!
+    private var configurator: CocktailListConfiguratorInputProtocol = CocktailListConfigurator()
+    private var sectionViewModel: CocktailSectionViewModelProtocol = CocktailSectionViewModel()
     private var cocktails: [Cocktail] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(CocktailCell.self, forCellReuseIdentifier: CocktailCell.cellID)
-        tableView.rowHeight = 100
-        fetchProduct()
+        configurator.configure(withView: self)
+        tableView.register(CocktailCell.self, forCellReuseIdentifier: "Cell")
+//        tableView.rowHeight = 100
+//        fetchProduct()
+        presenter.viewDidLoad()
     }
 }
 
 // MARK: UITableViewDataSource
 extension CocktailListViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cocktails.count
+        return sectionViewModel.numberOfRows
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CocktailCell.cellID, for: indexPath)
+        let cellViewModel = sectionViewModel.rows[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellViewModel.cellIdentifier, for: indexPath)
         guard let cell = cell as? CocktailCell else { return UITableViewCell() }
-        cell.configure(with: cocktails[indexPath.row])
+        cell.viewModel = cellViewModel
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        let infoCocktailVC = CocktailDetailsViewController()
-        infoCocktailVC.cocktail = cocktails[indexPath.row]
-        navigationController?.pushViewController(infoCocktailVC, animated: true)
+//        let infoCocktailVC = CocktailDetailsViewController()
+//        infoCocktailVC.cocktail = cocktails[indexPath.row]
+//        navigationController?.pushViewController(infoCocktailVC, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        sectionViewModel.rows[indexPath.row].cellHeight
     }
 }
 
@@ -57,5 +77,20 @@ extension CocktailListViewController {
             }
         }
     }
+
+}
+
+extension CocktailListViewController : CocktailListViewInputProtocol {
+    func reloadData(for section: CocktailSectionViewModel) {
+        sectionViewModel = section
+        tableView.reloadData()
+        
+    }
+    
+//    func display(cocktails: [Cocktail]) {
+//
+//        self.cocktails = cocktails
+//        tableView.reloadData()
+//    }
 
 }

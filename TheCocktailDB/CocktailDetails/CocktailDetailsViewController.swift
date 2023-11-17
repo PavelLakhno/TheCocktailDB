@@ -9,11 +9,13 @@ import UIKit
 
 protocol CocktailDetailsViewInputProtocol: AnyObject {
     func displayCocktailInstruction(with text: String)
-    func displayCocktailIngridients(_ ingridients: [String], and measures: [String])
-
+    func displayCocktailComposition(_ ingridients: [String?], and measures: [String?])
+    func displayImage(with imageData: Data)
+    func displayImageForFavoriteButton(with status: Bool)
 }
 
 protocol CocktailDetailsViewOutputProtocol {
+    func favoriteButtonPressed()
     init(view: CocktailDetailsViewInputProtocol)
     func showDetails()
 }
@@ -70,7 +72,7 @@ class CocktailDetailsViewController: UIViewController {
     var presenter: CocktailDetailsViewOutputProtocol!
     var configurator: CocktailDetailsConfiguratorInputProtocol = CocktailDetailsConfigurator()
     
-    private var isFavorite = false
+//    private var isFavorite = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,63 +80,64 @@ class CocktailDetailsViewController: UIViewController {
         view.addSubviews(imageCocktailView, favoriteButton, instructionLabel, ingridientsStackView)
         view.backgroundColor = .white
         imageCocktailView.addSubview(activityIndicator)
-        //instructionLabel.text = cocktail.strInstructions
+//        instructionLabel.text = cocktail.strInstructions
 
-        loadFavoriteStatus()
-        fetchImage()
-        createIngridientStackLabels()
+//        loadFavoriteStatus()
+//        fetchImage()
+//        createIngridientStackLabels()
         setupConstraints()
         presenter.showDetails()
     }
 
     // MARK: - Actions
     @objc func toggleFavorite(_ sender: UIButton) {
-        isFavorite.toggle()
-        setImageForFavoriteButton()
-        DataManager.shared.saveFavoriteStatus(for: cocktail.strDrink, with: isFavorite)
+//        isFavorite.toggle()
+//        setImageForFavoriteButton()
+//        DataManager.shared.saveFavoriteStatus(for: cocktail.strDrink, with: isFavorite)
+        presenter.favoriteButtonPressed()
     }
     
     // MARK: - Private Methods
-    private func setImageForFavoriteButton() {
-        favoriteButton.tintColor = isFavorite ? .red : .white
-    }
+//    private func setImageForFavoriteButton() {
+//        favoriteButton.tintColor = isFavorite ? .red : .white
+//    }
     
-    private func loadFavoriteStatus() {
-        isFavorite = DataManager.shared.loadFavoriteStatus(for: cocktail.strDrink)
-    }
+//    private func loadFavoriteStatus() {
+//        isFavorite = DataManager.shared.loadFavoriteStatus(for: cocktail.strDrink)
+//    }
     
-    private func createIngridientStackLabels() {
-        let ingridients = cocktail.getIngredients()
-        let measures = cocktail.getMeasures()
-        
-        for i in 0...ingridients.count-1 {
-            if ingridients[i] != nil {
-                
-                let stackView = UIStackView()
-                stackView.translatesAutoresizingMaskIntoConstraints = false
-                stackView.axis = .horizontal
-                stackView.distribution = .fillProportionally
-                stackView.spacing = 5
-                
-                let ingridientLabel = UILabel()
-                ingridientLabel.translatesAutoresizingMaskIntoConstraints = false
-                ingridientLabel.textAlignment = .left
-                ingridientLabel.font = .monospacedDigitSystemFont(ofSize: 15, weight: .medium)
-                ingridientLabel.numberOfLines = 0
-                ingridientLabel.text = ingridients[i]
-                
-                let measureLabel = UILabel()
-                measureLabel.translatesAutoresizingMaskIntoConstraints = false
-                measureLabel.textAlignment = .right
-                measureLabel.font = .italicSystemFont(ofSize: 15)
-                measureLabel.numberOfLines = 0
-                measureLabel.text = measures[i] != nil ? measures[i] : ""
-                
-                stackView.addArrangedSubviews(ingridientLabel, measureLabel)
-                ingridientsStackView.addArrangedSubview(stackView)
-            } else { return }
-        }
-    }
+//    private func createIngridientStackLabels() {
+//        let ingridients = cocktail.getIngredients()
+//        let measures = cocktail.getMeasures()
+//
+//        for i in 0...ingridients.count-1 {
+//            if ingridients[i] != nil {
+//
+//                let stackView = UIStackView()
+//                stackView.translatesAutoresizingMaskIntoConstraints = false
+//                stackView.axis = .horizontal
+//                stackView.distribution = .fillProportionally
+//                stackView.spacing = 5
+//
+//                let ingridientLabel = UILabel()
+//                ingridientLabel.translatesAutoresizingMaskIntoConstraints = false
+//                ingridientLabel.textAlignment = .left
+//                ingridientLabel.font = .monospacedDigitSystemFont(ofSize: 15, weight: .medium)
+//                ingridientLabel.numberOfLines = 0
+//                ingridientLabel.text = ingridients[i]
+//
+//                let measureLabel = UILabel()
+//                measureLabel.translatesAutoresizingMaskIntoConstraints = false
+//                measureLabel.textAlignment = .right
+//                measureLabel.font = .italicSystemFont(ofSize: 15)
+//                measureLabel.numberOfLines = 0
+//                measureLabel.text = measures[i] != nil ? measures[i] : ""
+//
+//                stackView.addArrangedSubviews(ingridientLabel, measureLabel)
+//                ingridientsStackView.addArrangedSubview(stackView)
+//            } else { return }
+//        }
+//    }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -172,7 +175,7 @@ extension CocktailDetailsViewController {
             case .success(let image):
                 self?.imageCocktailView.image = UIImage(data: image)
                 self?.activityIndicator.stopAnimating()
-                self?.setImageForFavoriteButton()
+//                self?.setImageForFavoriteButton()
             case .failure(let error):
                 print(error)
             }
@@ -186,7 +189,7 @@ extension CocktailDetailsViewController: CocktailDetailsViewInputProtocol {
         instructionLabel.text = text
     }
     
-    func displayCocktailIngridients(_ ingridients: [String], and measures: [String]) {
+    func displayCocktailComposition(_ ingridients: [String?], and measures: [String?]) {
         let ingridients = ingridients
         let measures = measures
         
@@ -219,4 +222,11 @@ extension CocktailDetailsViewController: CocktailDetailsViewInputProtocol {
         }
     }
     
+    func displayImage(with imageData: Data) {
+        imageCocktailView.image = UIImage(data: imageData)
+    }
+    
+    func displayImageForFavoriteButton(with status: Bool) {
+        favoriteButton.tintColor = status ? .red : .white
+    }
 }
