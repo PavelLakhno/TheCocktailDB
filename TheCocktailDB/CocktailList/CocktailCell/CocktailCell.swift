@@ -17,9 +17,7 @@ class CocktailCell: UITableViewCell, CellModelRepresentable {
             updateView()
         }
     }
-    
-//    static let cellID = "Cell"
-    
+
     private lazy var labelsStackView: UIStackView = {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -64,11 +62,9 @@ class CocktailCell: UITableViewCell, CellModelRepresentable {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
         labelsStackView.addArrangedSubviews(mainLabel, secondaryLabel)
         contentView.addSubviews(imageCocktailView, labelsStackView)
         imageCocktailView.addSubview(activityIndicator)
-        
         setConstraints()
      }
     
@@ -80,28 +76,14 @@ class CocktailCell: UITableViewCell, CellModelRepresentable {
         super.prepareForReuse()
         imageCocktailView.image = nil
     }
-   
-//    func configure(with cocktail: Cocktail) {
-//        self.mainLabel.text = cocktail.strDrink
-//        self.secondaryLabel.text = cocktail.strAlcoholic
-//          
-//        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self] result in
-//            switch result {
-//            case .success(let image):
-//                self?.imageCocktailView.image = UIImage(data: image)
-//                self?.activityIndicator.stopAnimating()
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
-//    }
     
     private func updateView() {
         guard let viewModel = viewModel as? CocktailCellViewModel else { return }
         self.mainLabel.text = viewModel.cocktailName
         self.secondaryLabel.text = viewModel.cocktailAlchoholic
-        if let imageData = viewModel.imageData {
+        viewModel.fetchImageCocktail {[unowned self] imageData in
             self.imageCocktailView.image = UIImage(data: imageData)
+            self.activityIndicator.stopAnimating()
         }
     }
     

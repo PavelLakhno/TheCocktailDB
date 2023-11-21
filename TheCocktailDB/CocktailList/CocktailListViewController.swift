@@ -9,13 +9,12 @@ import UIKit
 
 protocol CocktailListViewInputProtocol: AnyObject {
     func reloadData(for section: CocktailSectionViewModel)
-//    func display(cocktails: [Cocktail])
 }
 
 protocol CocktailListViewOutputProtocol {
     init(view: CocktailListViewInputProtocol)
     func viewDidLoad()
-//    func didTapCell(at indexPath: IndexPath)
+    func didTapCell(at indexPath: IndexPath)
 }
 
 class CocktailListViewController: UITableViewController {
@@ -28,8 +27,6 @@ class CocktailListViewController: UITableViewController {
         super.viewDidLoad()
         configurator.configure(withView: self)
         tableView.register(CocktailCell.self, forCellReuseIdentifier: "Cell")
-//        tableView.rowHeight = 100
-//        fetchProduct()
         presenter.viewDidLoad()
     }
 }
@@ -50,9 +47,7 @@ extension CocktailListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-//        let infoCocktailVC = CocktailDetailsViewController()
-//        infoCocktailVC.cocktail = cocktails[indexPath.row]
-//        navigationController?.pushViewController(infoCocktailVC, animated: true)
+        presenter.didTapCell(at: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -62,7 +57,6 @@ extension CocktailListViewController {
 
 // MARK: API request
 extension CocktailListViewController {
-    
     private func fetchProduct() {
         NetworkManager.shared.fetchCocktails(from: Link.cocktailsURL.rawValue) { [weak self]
             result in
@@ -77,20 +71,11 @@ extension CocktailListViewController {
             }
         }
     }
-
 }
 
 extension CocktailListViewController : CocktailListViewInputProtocol {
     func reloadData(for section: CocktailSectionViewModel) {
         sectionViewModel = section
         tableView.reloadData()
-        
     }
-    
-//    func display(cocktails: [Cocktail]) {
-//
-//        self.cocktails = cocktails
-//        tableView.reloadData()
-//    }
-
 }

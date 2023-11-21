@@ -11,7 +11,6 @@ struct CocktailDetailsDataStore {
     let cocktailInstruction: String
     let ingridients: [String?]
     let measures: [String?]
-    let imageData: Data?
     let isFavorite: Bool
 }
 
@@ -25,6 +24,7 @@ class CocktailDetailsPresenter: CocktailDetailsViewOutputProtocol {
     
     func showDetails() {
         interactor.provideCocktailDetails()
+        interactor.fetchImageCocktail()
     }
 
     func favoriteButtonPressed() {
@@ -34,20 +34,19 @@ class CocktailDetailsPresenter: CocktailDetailsViewOutputProtocol {
 
 // MARK: CocktailDetailsInteractorOutputProtocol
 extension CocktailDetailsPresenter: CocktailDetailsInteractorOutputProtocol {
-
     func receiveCoctailDetails(with dataStore: CocktailDetailsDataStore) {
         let ingridients = dataStore.ingridients
         let measures = dataStore.measures
         view.displayCocktailInstruction(with: dataStore.cocktailInstruction)
         view.displayCocktailComposition(ingridients, and: measures)
         view.displayImageForFavoriteButton(with: dataStore.isFavorite)
-        
-        guard let imageData = dataStore.imageData else { return }
-        view.displayImage(with: imageData)
     }
     
     func receiveFavoriteStatus(with status: Bool) {
         view.displayImageForFavoriteButton(with: status)
     }
     
+    func receiveImageCocktail(with imageData: Data) {
+        view.displayImage(with: imageData)
+    }
 }

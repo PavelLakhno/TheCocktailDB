@@ -20,9 +20,7 @@ protocol CocktailDetailsViewOutputProtocol {
     func showDetails()
 }
 
-
 class CocktailDetailsViewController: UIViewController {
-    
     private lazy var imageCocktailView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,73 +69,23 @@ class CocktailDetailsViewController: UIViewController {
     var cocktail: Cocktail!
     var presenter: CocktailDetailsViewOutputProtocol!
     var configurator: CocktailDetailsConfiguratorInputProtocol = CocktailDetailsConfigurator()
-    
-//    private var isFavorite = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configurator.configure(withView: self, and: cocktail)
         view.addSubviews(imageCocktailView, favoriteButton, instructionLabel, ingridientsStackView)
         view.backgroundColor = .white
         imageCocktailView.addSubview(activityIndicator)
-//        instructionLabel.text = cocktail.strInstructions
-
-//        loadFavoriteStatus()
-//        fetchImage()
-//        createIngridientStackLabels()
         setupConstraints()
         presenter.showDetails()
     }
 
     // MARK: - Actions
     @objc func toggleFavorite(_ sender: UIButton) {
-//        isFavorite.toggle()
-//        setImageForFavoriteButton()
-//        DataManager.shared.saveFavoriteStatus(for: cocktail.strDrink, with: isFavorite)
         presenter.favoriteButtonPressed()
     }
     
     // MARK: - Private Methods
-//    private func setImageForFavoriteButton() {
-//        favoriteButton.tintColor = isFavorite ? .red : .white
-//    }
-    
-//    private func loadFavoriteStatus() {
-//        isFavorite = DataManager.shared.loadFavoriteStatus(for: cocktail.strDrink)
-//    }
-    
-//    private func createIngridientStackLabels() {
-//        let ingridients = cocktail.getIngredients()
-//        let measures = cocktail.getMeasures()
-//
-//        for i in 0...ingridients.count-1 {
-//            if ingridients[i] != nil {
-//
-//                let stackView = UIStackView()
-//                stackView.translatesAutoresizingMaskIntoConstraints = false
-//                stackView.axis = .horizontal
-//                stackView.distribution = .fillProportionally
-//                stackView.spacing = 5
-//
-//                let ingridientLabel = UILabel()
-//                ingridientLabel.translatesAutoresizingMaskIntoConstraints = false
-//                ingridientLabel.textAlignment = .left
-//                ingridientLabel.font = .monospacedDigitSystemFont(ofSize: 15, weight: .medium)
-//                ingridientLabel.numberOfLines = 0
-//                ingridientLabel.text = ingridients[i]
-//
-//                let measureLabel = UILabel()
-//                measureLabel.translatesAutoresizingMaskIntoConstraints = false
-//                measureLabel.textAlignment = .right
-//                measureLabel.font = .italicSystemFont(ofSize: 15)
-//                measureLabel.numberOfLines = 0
-//                measureLabel.text = measures[i] != nil ? measures[i] : ""
-//
-//                stackView.addArrangedSubviews(ingridientLabel, measureLabel)
-//                ingridientsStackView.addArrangedSubview(stackView)
-//            } else { return }
-//        }
-//    }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -167,24 +115,7 @@ class CocktailDetailsViewController: UIViewController {
     }
 }
 
-extension CocktailDetailsViewController {
-    private func fetchImage() {
-        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { [weak self]
-            result in
-            switch result {
-            case .success(let image):
-                self?.imageCocktailView.image = UIImage(data: image)
-                self?.activityIndicator.stopAnimating()
-//                self?.setImageForFavoriteButton()
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-}
-
 extension CocktailDetailsViewController: CocktailDetailsViewInputProtocol {
-
     func displayCocktailInstruction(with text: String) {
         instructionLabel.text = text
     }
@@ -224,7 +155,9 @@ extension CocktailDetailsViewController: CocktailDetailsViewInputProtocol {
     
     func displayImage(with imageData: Data) {
         imageCocktailView.image = UIImage(data: imageData)
+        activityIndicator.stopAnimating()
     }
+
     
     func displayImageForFavoriteButton(with status: Bool) {
         favoriteButton.tintColor = status ? .red : .white

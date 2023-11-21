@@ -20,6 +20,8 @@ class CocktailListRouter: CocktailListRouterInputProtocol {
     }
 
     func openCocktailDetailsViewController(with cocktail: Cocktail) {
-        view.performSegue(withIdentifier: "showDetails", sender: cocktail)
+        let detailsVC = CocktailDetailsViewController()
+        detailsVC.cocktail = cocktail
+        view.navigationController?.pushViewController(detailsVC, animated: true)
     }
 }

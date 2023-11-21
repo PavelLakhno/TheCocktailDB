@@ -36,15 +36,8 @@ class CocktailListPresenter: CocktailListViewOutputProtocol {
 extension CocktailListPresenter: CocktailListInteractorOutputProtocol {
     func cocktailsDidReceive(with dataStore: CocktailListDataStore) {
         self.dataStore = dataStore
-//        let section = CocktailSectionViewModel()
-//        dataStore.courses.forEach { section.rows.append(CocktailCellViewModel(course: $0)) }
-//        view.reloadData(for: section)
-//        view.display(cocktails: dataStore.cocktails)
         let section = CocktailSectionViewModel()
-        for cocktail in dataStore.cocktails {
-            let cocktailCellViewModel = CocktailCellViewModel(cocktail: cocktail)
-            section.rows.append(cocktailCellViewModel)
-        }
+        dataStore.cocktails.forEach { section.rows.append(CocktailCellViewModel(cocktail: $0)) }
         view.reloadData(for: section)
     }
 }

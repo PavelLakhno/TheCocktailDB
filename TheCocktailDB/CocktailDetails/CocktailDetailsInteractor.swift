@@ -12,12 +12,13 @@ protocol CocktailDetailsInteractorInputProtocol {
     init(presenter: CocktailDetailsInteractorOutputProtocol, cocktail: Cocktail)
     func provideCocktailDetails()
     func toggleFavoriteStatus()
-//    func fetchImageCocktail(completion: @escaping (Data) -> Void)
+    func fetchImageCocktail()
 }
 
 protocol CocktailDetailsInteractorOutputProtocol: AnyObject {
     func receiveCoctailDetails(with dataStore: CocktailDetailsDataStore)
     func receiveFavoriteStatus(with status: Bool)
+    func receiveImageCocktail(with imageData: Data)
 }
 
 class CocktailDetailsInteractor: CocktailDetailsInteractorInputProtocol {
@@ -39,12 +40,10 @@ class CocktailDetailsInteractor: CocktailDetailsInteractorInputProtocol {
     }
     
     func provideCocktailDetails() {
-        let imageData = NetworkManager.shared.fetchImageData(from: cocktail.strDrinkThumb)
         let dataStore = CocktailDetailsDataStore(
             cocktailInstruction: cocktail.strInstructions,
             ingridients: cocktail.getIngredients(),
             measures: cocktail.getMeasures(),
-            imageData: imageData,
             isFavorite: isFavorite
         )
         presenter.receiveCoctailDetails(with: dataStore)
@@ -55,14 +54,14 @@ class CocktailDetailsInteractor: CocktailDetailsInteractorInputProtocol {
         presenter.receiveFavoriteStatus(with: isFavorite)
     }
     
-//    func fetchImageCocktail(completion: @escaping (Data) -> Void) {
-//        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { result in
-//            switch result {
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
-//    }
+    func fetchImageCocktail() {
+        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) {[unowned self] result in
+            switch result {
+            case .success(let data):
+                presenter.receiveImageCocktail(with: data)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
 }

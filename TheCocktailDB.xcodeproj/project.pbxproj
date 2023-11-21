@@ -127,7 +127,7 @@
 		CEB279462AEFA7FD0055A956 /* TheCocktailDB */ = {
 			isa = PBXGroup;
 			children = (
-				CEB2795C2AEFAC4B0055A956 /* CoctailList */,
+				CEB2795C2AEFAC4B0055A956 /* CocktailList */,
 				CE8CD1C02B04A74E00F3827E /* CocktailDetails */,
 				CEA31C012AF2442A00127EBA /* Models */,
 				CEABF9432AF0F58F0096E71E /* Services */,
@@ -146,7 +146,7 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
-		CEB2795C2AEFAC4B0055A956 /* CoctailList */ = {
+		CEB2795C2AEFAC4B0055A956 /* CocktailList */ = {
 			isa = PBXGroup;
 			children = (
 				CEA31C062AF2768700127EBA /* CocktailCell */,
@@ -156,7 +156,7 @@
 				CE8C46C22B06438500D45088 /* CocktailListRouter.swift */,
 				CE8C46C02B06437600D45088 /* CocktailListConfigurator.swift */,
 			);
-			path = CoctailList;
+			path = CocktailList;
 			sourceTree = "<group>";
 		};
 		CEB2795D2AEFAC6A0055A956 /* SupportingFiles */ = {
