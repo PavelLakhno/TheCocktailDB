@@ -7,61 +7,43 @@
 
 import Foundation
 
-protocol CocktailDetailsInteractorInputProtocol {
+protocol CocktailDetailsBusinessLogic {
+    func provideCocktailDetails()//request: CocktailDetails.ShowDetails.Request)
+    func setFavoriteStatus()
+}
+
+protocol CocktailDetailsDataStore {
+    var cocktail: Cocktail? { get set }
     var isFavorite: Bool { get }
-    init(presenter: CocktailDetailsInteractorOutputProtocol, cocktail: Cocktail)
-    func provideCocktailDetails()
-    func toggleFavoriteStatus()
-    func fetchImageCocktail()
 }
 
-protocol CocktailDetailsInteractorOutputProtocol: AnyObject {
-    func receiveCoctailDetails(with dataStore: CocktailDetailsDataStore)
-    func receiveFavoriteStatus(with status: Bool)
-    func receiveImageCocktail(with imageData: Data)
-}
-
-class CocktailDetailsInteractor: CocktailDetailsInteractorInputProtocol {
-   
-    var isFavorite: Bool {
-        get {
-            DataManager.shared.loadFavoriteStatus(for: cocktail.strDrink)
-        } set {
-            DataManager.shared.saveFavoriteStatus(for: cocktail.strDrink, with: newValue)
-        }
-    }
-    
-    private unowned let presenter: CocktailDetailsInteractorOutputProtocol
-    private let cocktail: Cocktail
-    
-    required init(presenter: CocktailDetailsInteractorOutputProtocol, cocktail: Cocktail) {
-        self.presenter = presenter
-        self.cocktail = cocktail
-    }
+class CocktailDetailsInteractor: CocktailDetailsBusinessLogic, CocktailDetailsDataStore {
+    var cocktail: Cocktail?
+    var isFavorite: Bool = false
+    var presenter: CocktailDetailsPresentationLogic?
+    var worker: CocktailDetailsWorker?
     
     func provideCocktailDetails() {
-        let dataStore = CocktailDetailsDataStore(
-            cocktailInstruction: cocktail.strInstructions,
-            ingridients: cocktail.getIngredients(),
-            measures: cocktail.getMeasures(),
+        worker = CocktailDetailsWorker()
+        isFavorite = worker?.getFavoriteStatus(for: cocktail?.strDrink ?? "") ?? false
+        let imageData = worker?.getImage(from: cocktail?.strDrinkThumb)
+        
+        let response = CocktailDetails.ShowDetails.Response(
+            cocktailInstruction: cocktail?.strInstructions,
+            measures: cocktail?.getMeasures() ?? [""],
+            ingridients: cocktail?.getIngredients() ?? [""],
+            imageURL: imageData,
             isFavorite: isFavorite
         )
-        presenter.receiveCoctailDetails(with: dataStore)
+        presenter?.presentCocktailDetails(response: response)
     }
     
-    func toggleFavoriteStatus() {
+    func setFavoriteStatus() {
         isFavorite.toggle()
-        presenter.receiveFavoriteStatus(with: isFavorite)
+        worker?.setNewFavoriteStatus(for: cocktail?.strDrink ?? "", with: isFavorite)
+        
+        let response = CocktailDetails.SetFavoriteStatus.Response(isFavorite: isFavorite)
+        presenter?.presentFavoriteStatus(response: response)
     }
     
-    func fetchImageCocktail() {
-        NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) {[unowned self] result in
-            switch result {
-            case .success(let data):
-                presenter.receiveImageCocktail(with: data)
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
 }

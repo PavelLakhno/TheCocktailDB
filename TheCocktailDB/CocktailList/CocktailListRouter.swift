@@ -7,21 +7,37 @@
 
 import Foundation
 
-protocol CocktailListRouterInputProtocol {
-    init(view: CocktailListViewController)
-    func openCocktailDetailsViewController(with cocktail: Cocktail)
+protocol CocktailListRoutingLogic {
+    func navigateToPushedViewController(index: Int)
 }
 
-class CocktailListRouter: CocktailListRouterInputProtocol {
-    private unowned let view: CocktailListViewController
+protocol CocktailListDataPassing {
+    var dataStore: CocktailListDataStore? { get }
+}
 
-    required init(view: CocktailListViewController) {
-        self.view = view
+class CocktailListRouter: CocktailListRoutingLogic, CocktailListDataPassing {
+    weak var viewController: CocktailListViewController?
+    var dataStore: CocktailListDataStore?
+    
+    func navigateToPushedViewController(index: Int) {
+        let destinationVC = CocktailDetailsViewController()
+        var destinationDS = destinationVC.router?.dataStore
+        destinationDS?.cocktail = dataStore?.cocktails[index]
+//        destinationDS = dataStore?.cocktails[index] as? any CocktailDetailsDataStore
+//        passDataToCocktailDetails(source: dataStore ?? CocktailListDataStore, destination: &((destinationDS) ?? CocktailDetailsDataStore))
+//        passDataToCocktailDetails(source: dataStore!, destination: &(destinationDS)!)
+        navigateToCocktailDetails(source: viewController, destination: destinationVC)
+        passDataToCocktailDetails(source: dataStore!, destination: &(destinationDS)!)
     }
-
-    func openCocktailDetailsViewController(with cocktail: Cocktail) {
-        let detailsVC = CocktailDetailsViewController()
-        detailsVC.cocktail = cocktail
-        view.navigationController?.pushViewController(detailsVC, animated: true)
+    
+    // MARK: Navigation
+    func navigateToCocktailDetails(source: CocktailListViewController?, destination: CocktailDetailsViewController) {
+        source?.navigationController?.pushViewController(destination, animated: true)
+    }
+    
+    // MARK: Passing data
+    func passDataToCocktailDetails(source: CocktailListDataStore, destination: inout CocktailDetailsDataStore) {
+        guard let indexPath = viewController?.tableView.indexPathForSelectedRow else { return }
+        destination.cocktail = source.cocktails[indexPath.row]
     }
 }

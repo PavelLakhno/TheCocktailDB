@@ -80,11 +80,16 @@ class CocktailCell: UITableViewCell, CellModelRepresentable {
     private func updateView() {
         guard let viewModel = viewModel as? CocktailCellViewModel else { return }
         self.mainLabel.text = viewModel.cocktailName
-        self.secondaryLabel.text = viewModel.cocktailAlchoholic
-        viewModel.fetchImageCocktail {[unowned self] imageData in
-            self.imageCocktailView.image = UIImage(data: imageData)
-            self.activityIndicator.stopAnimating()
+        self.secondaryLabel.text = viewModel.cocktailAlchohol
+//        viewModel.fetchImageCocktail {[unowned self] imageData in
+//            self.imageCocktailView.image = UIImage(data: imageData)
+//            self.activityIndicator.stopAnimating()
+//        }
+        if let imageData = viewModel.imageData {
+            imageCocktailView.image = UIImage(data: imageData)
+            activityIndicator.stopAnimating()
         }
+//        self.imageCocktailView.image = UIImage(data: viewModel.imageData ?? Data())
     }
     
     private func setConstraints() {

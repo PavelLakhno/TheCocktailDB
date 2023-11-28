@@ -7,18 +7,20 @@
 
 import Foundation
 
-protocol CocktailListConfiguratorInputProtocol {
-    func configure(withView view: CocktailListViewController)
-}
-
-class CocktailListConfigurator: CocktailListConfiguratorInputProtocol {
-    func configure(withView view: CocktailListViewController) {
-        let presenter = CocktailListPresenter(view: view)
-        let interactor = CocktailListInteractor(presenter: presenter)
-        let router = CocktailListRouter(view: view)
-
-        view.presenter = presenter
-        presenter.interactor = interactor
-        presenter.router = router
+final class CocktailListConfigurator {
+    static let shared = CocktailListConfigurator()
+    
+    private init() {}
+    
+    func configure(withView viewController: CocktailListViewController) {
+        let presenter = CocktailListPresenter()
+        let interactor = CocktailListInteractor()
+        let router = CocktailListRouter()
+        viewController.interactor = interactor
+        viewController.router = router
+        interactor.presenter = presenter
+        presenter.viewController = viewController
+        router.viewController = viewController
+        router.dataStore = interactor
     }
 }

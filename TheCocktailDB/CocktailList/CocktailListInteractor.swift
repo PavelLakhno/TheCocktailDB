@@ -7,35 +7,41 @@
 
 import Foundation
 
-protocol CocktailListInteractorInputProtocol {
-    init(presenter: CocktailListInteractorOutputProtocol)
+protocol CocktailListBusinessLogic {
     func fetchCocktails()
 }
 
-protocol CocktailListInteractorOutputProtocol: AnyObject {
-    func cocktailsDidReceive(with dataStore: CocktailListDataStore)
+protocol CocktailListDataStore {
+    var cocktails: [Cocktail] { get }
 }
 
-class CocktailListInteractor: CocktailListInteractorInputProtocol {
-    private unowned let presenter: CocktailListInteractorOutputProtocol
+class CocktailListInteractor: CocktailListBusinessLogic, CocktailListDataStore {
 
-    required init(presenter: CocktailListInteractorOutputProtocol) {
-        self.presenter = presenter
-    }
+    var presenter: CocktailListPresentationLogic?
 
+    var cocktails: [Cocktail] = []
+    
     func fetchCocktails() {
-        NetworkManager.shared.fetchCocktails(from: Link.cocktailsURL.rawValue) { [unowned self]
-        result in
-        switch result{
-        case .success(let cocktails):
-            let dataStore = CocktailListDataStore(cocktails: cocktails.drinks)
-//            for cocktail in cocktails.drinks {
-//                self.cocktails.append(cocktail)
-//            }
-            presenter.cocktailsDidReceive(with: dataStore)
-        case .failure(let error):
-            print(error.localizedDescription)
+//        NetworkManager.shared.fetchCocktails(from: Link.cocktailsURL.rawValue) { [weak self] cocktails in
+//            self?.cocktails = cocktails
+//            let response = CocktailList.ShowCocktails.Response(cocktails: cocktails)
+//            presenter.presentCocktails(response: response)
+//        }
+        
+        NetworkManager.shared.fetchCocktails(from: Link.cocktailsURL.rawValue) { [weak self]
+            result in
+            switch result{
+            case .success(let cocktails):
+                for cocktail in cocktails.drinks {
+                    self?.cocktails.append(cocktail)
+                }
+                let response = CocktailList.ShowCocktails.Response(cocktails: self?.cocktails ?? [])
+                self?.presenter?.presentCocktails(response: response)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
+        
     }
-    }
+
 }

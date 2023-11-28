@@ -7,39 +7,38 @@
 
 import UIKit
 
-protocol CocktailListViewInputProtocol: AnyObject {
-    func reloadData(for section: CocktailSectionViewModel)
-}
-
-protocol CocktailListViewOutputProtocol {
-    init(view: CocktailListViewInputProtocol)
-    func viewDidLoad()
-    func didTapCell(at indexPath: IndexPath)
+protocol CocktailListDisplayLogic: AnyObject {
+    func displayCocktails(viewModel: CocktailList.ShowCocktails.ViewModel)
 }
 
 class CocktailListViewController: UITableViewController {
-    var presenter: CocktailListViewOutputProtocol!
-    private var configurator: CocktailListConfiguratorInputProtocol = CocktailListConfigurator()
-    private var sectionViewModel: CocktailSectionViewModelProtocol = CocktailSectionViewModel()
-    private var cocktails: [Cocktail] = []
+    
+    var interactor: CocktailListBusinessLogic?
+    var router: (CocktailListRoutingLogic & CocktailListDataPassing)?
+    
+    private var rows: [CocktailCellViewModelProtocol] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configurator.configure(withView: self)
+        CocktailListConfigurator.shared.configure(withView: self)
         tableView.register(CocktailCell.self, forCellReuseIdentifier: "Cell")
-        presenter.viewDidLoad()
+        showCocktails()
+    }
+    
+    private func showCocktails() {
+        interactor?.fetchCocktails()
     }
 }
 
 // MARK: UITableViewDataSource
 extension CocktailListViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sectionViewModel.numberOfRows
+        rows.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellViewModel = sectionViewModel.rows[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellViewModel.cellIdentifier, for: indexPath)
+        let cellViewModel = rows[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellViewModel.identifier, for: indexPath)
         guard let cell = cell as? CocktailCell else { return UITableViewCell() }
         cell.viewModel = cellViewModel
         return cell
@@ -47,35 +46,19 @@ extension CocktailListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        presenter.didTapCell(at: indexPath)
+        router?.navigateToPushedViewController(index: indexPath.row)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        sectionViewModel.rows[indexPath.row].cellHeight
+        rows[indexPath.row].height
     }
 }
 
 // MARK: API request
-extension CocktailListViewController {
-    private func fetchProduct() {
-        NetworkManager.shared.fetchCocktails(from: Link.cocktailsURL.rawValue) { [weak self]
-            result in
-            switch result{
-            case .success(let cocktails):
-                for cocktail in cocktails.drinks {
-                    self?.cocktails.append(cocktail)
-                }
-                self?.tableView.reloadData()
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-}
-
-extension CocktailListViewController : CocktailListViewInputProtocol {
-    func reloadData(for section: CocktailSectionViewModel) {
-        sectionViewModel = section
+extension CocktailListViewController: CocktailListDisplayLogic {
+    func displayCocktails(viewModel: CocktailList.ShowCocktails.ViewModel) {
+        rows = viewModel.rows
         tableView.reloadData()
     }
 }
+

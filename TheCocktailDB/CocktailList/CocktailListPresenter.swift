@@ -7,37 +7,20 @@
 
 import Foundation
 
-struct CocktailListDataStore {
-    let cocktails: [Cocktail]
+protocol CocktailListPresentationLogic {
+    func presentCocktails(response: CocktailList.ShowCocktails.Response)
 }
 
-class CocktailListPresenter: CocktailListViewOutputProtocol {
-    var interactor: CocktailListInteractorInputProtocol!
-    var router: CocktailListRouterInputProtocol!
+class CocktailListPresenter: CocktailListPresentationLogic {
 
-    private unowned let view: CocktailListViewInputProtocol
-    private var dataStore: CocktailListDataStore?
+    weak var viewController: CocktailListDisplayLogic?
 
-    required init(view: CocktailListViewInputProtocol) {
-        self.view = view
+    func presentCocktails(response: CocktailList.ShowCocktails.Response) {
+        let rows: [CocktailCellViewModelProtocol] = response.cocktails.map {
+            CocktailCellViewModel(cocktail: $0)
+        }
+        let viewModel = CocktailList.ShowCocktails.ViewModel(rows: rows)
+        viewController?.displayCocktails(viewModel: viewModel)
     }
 
-    func viewDidLoad() {
-        interactor.fetchCocktails()
-    }
-
-    func didTapCell(at indexPath: IndexPath) {
-        guard let cocktail = dataStore?.cocktails[indexPath.row] else { return }
-        router.openCocktailDetailsViewController(with: cocktail)
-    }
-}
-
-// MARK: - CocktailListInteractorOutputProtocol
-extension CocktailListPresenter: CocktailListInteractorOutputProtocol {
-    func cocktailsDidReceive(with dataStore: CocktailListDataStore) {
-        self.dataStore = dataStore
-        let section = CocktailSectionViewModel()
-        dataStore.cocktails.forEach { section.rows.append(CocktailCellViewModel(cocktail: $0)) }
-        view.reloadData(for: section)
-    }
 }

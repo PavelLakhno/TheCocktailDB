@@ -7,17 +7,9 @@
 
 import UIKit
 
-protocol CocktailDetailsViewInputProtocol: AnyObject {
-    func displayCocktailInstruction(with text: String)
-    func displayCocktailComposition(_ ingridients: [String?], and measures: [String?])
-    func displayImage(with imageData: Data)
-    func displayImageForFavoriteButton(with status: Bool)
-}
-
-protocol CocktailDetailsViewOutputProtocol {
-    func favoriteButtonPressed()
-    init(view: CocktailDetailsViewInputProtocol)
-    func showDetails()
+protocol CocktailDetailsDisplayLogic: AnyObject {
+    func displayCocktailDetails(viewModel: CocktailDetails.ShowDetails.ViewModel)
+    func displayFavoriteButtonStatus(viewModel: CocktailDetails.SetFavoriteStatus.ViewModel)
 }
 
 class CocktailDetailsViewController: UIViewController {
@@ -66,23 +58,37 @@ class CocktailDetailsViewController: UIViewController {
         return activIndicator
     }()
     
-    var cocktail: Cocktail!
-    var presenter: CocktailDetailsViewOutputProtocol!
-    var configurator: CocktailDetailsConfiguratorInputProtocol = CocktailDetailsConfigurator()
+//    var cocktail: Cocktail!
+    var interactor: CocktailDetailsBusinessLogic?
+    var router: (CocktailDetailsRoutingLogic & CocktailDetailsDataPassing)?
 
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        CocktailDetailsConfigurator.shared.configure(with: self)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        CocktailDetailsConfigurator.shared.configure(with: self)
+    }
+
+    // MARK: ViewLifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configurator.configure(withView: self, and: cocktail)
         view.addSubviews(imageCocktailView, favoriteButton, instructionLabel, ingridientsStackView)
         view.backgroundColor = .white
         imageCocktailView.addSubview(activityIndicator)
         setupConstraints()
-        presenter.showDetails()
+        passRequest()
     }
 
     // MARK: - Actions
     @objc func toggleFavorite(_ sender: UIButton) {
-        presenter.favoriteButtonPressed()
+        interactor?.setFavoriteStatus()
+    }
+    
+    private func passRequest() {
+        interactor?.provideCocktailDetails()
     }
     
     // MARK: - Private Methods
@@ -115,14 +121,18 @@ class CocktailDetailsViewController: UIViewController {
     }
 }
 
-extension CocktailDetailsViewController: CocktailDetailsViewInputProtocol {
-    func displayCocktailInstruction(with text: String) {
-        instructionLabel.text = text
+// MARK: - CourseDetailsDisplayLogic
+extension CocktailDetailsViewController: CocktailDetailsDisplayLogic {
+    func displayCocktailDetails(viewModel: CocktailDetails.ShowDetails.ViewModel) {
+        instructionLabel.text = viewModel.cocktailInstruction
+        displayCocktailComposition(viewModel: viewModel)
+        imageCocktailView.image = UIImage(data: viewModel.imageURL)
+        favoriteButton.tintColor = viewModel.isFavorite ? .red : .white
     }
     
-    func displayCocktailComposition(_ ingridients: [String?], and measures: [String?]) {
-        let ingridients = ingridients
-        let measures = measures
+    private  func displayCocktailComposition(viewModel: CocktailDetails.ShowDetails.ViewModel){
+        let ingridients = viewModel.ingridients
+        let measures = viewModel.measures
         
         for i in 0...ingridients.count-1 {
             if ingridients[i] != nil {
@@ -152,14 +162,8 @@ extension CocktailDetailsViewController: CocktailDetailsViewInputProtocol {
             } else { return }
         }
     }
-    
-    func displayImage(with imageData: Data) {
-        imageCocktailView.image = UIImage(data: imageData)
-        activityIndicator.stopAnimating()
-    }
 
-    
-    func displayImageForFavoriteButton(with status: Bool) {
-        favoriteButton.tintColor = status ? .red : .white
+    func displayFavoriteButtonStatus(viewModel: CocktailDetails.SetFavoriteStatus.ViewModel) {
+        favoriteButton.tintColor = viewModel.isFavorite ? .red : .white
     }
 }

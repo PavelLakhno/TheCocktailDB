@@ -7,46 +7,28 @@
 
 import Foundation
 
-struct CocktailDetailsDataStore {
-    let cocktailInstruction: String
-    let ingridients: [String?]
-    let measures: [String?]
-    let isFavorite: Bool
+protocol CocktailDetailsPresentationLogic {
+    func presentCocktailDetails(response: CocktailDetails.ShowDetails.Response)
+    func presentFavoriteStatus(response: CocktailDetails.SetFavoriteStatus.Response)
 }
 
-class CocktailDetailsPresenter: CocktailDetailsViewOutputProtocol {
-    var interactor: CocktailDetailsInteractorInputProtocol!
-    private unowned let view: CocktailDetailsViewInputProtocol
+class CocktailDetailsPresenter: CocktailDetailsPresentationLogic {
     
-    required init(view: CocktailDetailsViewInputProtocol) {
-        self.view = view
-    }
+    weak var viewController: CocktailDetailsDisplayLogic?
     
-    func showDetails() {
-        interactor.provideCocktailDetails()
-        interactor.fetchImageCocktail()
-    }
-
-    func favoriteButtonPressed() {
-        interactor.toggleFavoriteStatus()
-    }
-}
-
-// MARK: CocktailDetailsInteractorOutputProtocol
-extension CocktailDetailsPresenter: CocktailDetailsInteractorOutputProtocol {
-    func receiveCoctailDetails(with dataStore: CocktailDetailsDataStore) {
-        let ingridients = dataStore.ingridients
-        let measures = dataStore.measures
-        view.displayCocktailInstruction(with: dataStore.cocktailInstruction)
-        view.displayCocktailComposition(ingridients, and: measures)
-        view.displayImageForFavoriteButton(with: dataStore.isFavorite)
+    func presentCocktailDetails(response: CocktailDetails.ShowDetails.Response) {
+        let viewModel = CocktailDetails.ShowDetails.ViewModel(
+            cocktailInstruction: response.cocktailInstruction ?? "",
+            measures: response.measures,
+            ingridients: response.ingridients,
+            imageURL: response.imageURL ?? Data(),
+            isFavorite: response.isFavorite
+        )
+        viewController?.displayCocktailDetails(viewModel: viewModel)
     }
     
-    func receiveFavoriteStatus(with status: Bool) {
-        view.displayImageForFavoriteButton(with: status)
-    }
-    
-    func receiveImageCocktail(with imageData: Data) {
-        view.displayImage(with: imageData)
+    func presentFavoriteStatus(response: CocktailDetails.SetFavoriteStatus.Response) {
+        let viewModel = CocktailDetails.SetFavoriteStatus.ViewModel(isFavorite: response.isFavorite)
+        viewController?.displayFavoriteButtonStatus(viewModel: viewModel)
     }
 }
