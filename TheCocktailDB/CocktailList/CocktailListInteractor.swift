@@ -18,16 +18,9 @@ protocol CocktailListDataStore {
 class CocktailListInteractor: CocktailListBusinessLogic, CocktailListDataStore {
 
     var presenter: CocktailListPresentationLogic?
-
     var cocktails: [Cocktail] = []
     
     func fetchCocktails() {
-//        NetworkManager.shared.fetchCocktails(from: Link.cocktailsURL.rawValue) { [weak self] cocktails in
-//            self?.cocktails = cocktails
-//            let response = CocktailList.ShowCocktails.Response(cocktails: cocktails)
-//            presenter.presentCocktails(response: response)
-//        }
-        
         NetworkManager.shared.fetchCocktails(from: Link.cocktailsURL.rawValue) { [weak self]
             result in
             switch result{
@@ -41,7 +34,5 @@ class CocktailListInteractor: CocktailListBusinessLogic, CocktailListDataStore {
                 print(error.localizedDescription)
             }
         }
-        
     }
-
 }

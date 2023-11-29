@@ -8,8 +8,9 @@
 import Foundation
 
 protocol CocktailDetailsBusinessLogic {
-    func provideCocktailDetails()//request: CocktailDetails.ShowDetails.Request)
+    func provideCocktailDetails()
     func setFavoriteStatus()
+    func fetchImageCocktail()
 }
 
 protocol CocktailDetailsDataStore {
@@ -26,13 +27,11 @@ class CocktailDetailsInteractor: CocktailDetailsBusinessLogic, CocktailDetailsDa
     func provideCocktailDetails() {
         worker = CocktailDetailsWorker()
         isFavorite = worker?.getFavoriteStatus(for: cocktail?.strDrink ?? "") ?? false
-        let imageData = worker?.getImage(from: cocktail?.strDrinkThumb)
         
         let response = CocktailDetails.ShowDetails.Response(
             cocktailInstruction: cocktail?.strInstructions,
             measures: cocktail?.getMeasures() ?? [""],
             ingridients: cocktail?.getIngredients() ?? [""],
-            imageURL: imageData,
             isFavorite: isFavorite
         )
         presenter?.presentCocktailDetails(response: response)
@@ -46,4 +45,10 @@ class CocktailDetailsInteractor: CocktailDetailsBusinessLogic, CocktailDetailsDa
         presenter?.presentFavoriteStatus(response: response)
     }
     
+    func fetchImageCocktail() {
+        worker?.fetchImage(from: cocktail?.strDrinkThumb, completion: {[weak self] imageData in
+            let response = CocktailDetails.ShowImage.Response(imageURL: imageData)
+            self?.presenter?.presentImageCocktail(response: response)
+        })
+    }
 }

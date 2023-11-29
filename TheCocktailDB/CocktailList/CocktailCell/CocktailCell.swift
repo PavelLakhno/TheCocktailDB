@@ -85,9 +85,14 @@ class CocktailCell: UITableViewCell, CellModelRepresentable {
 //            self.imageCocktailView.image = UIImage(data: imageData)
 //            self.activityIndicator.stopAnimating()
 //        }
-        if let imageData = viewModel.imageData {
-            imageCocktailView.image = UIImage(data: imageData)
-            activityIndicator.stopAnimating()
+//        if let imageData = viewModel.imageData {
+//            imageCocktailView.image = UIImage(data: imageData)
+//            activityIndicator.stopAnimating()
+//        }
+        
+        viewModel.fetchImageCocktail {[unowned self] imageData in
+            self.imageCocktailView.image = UIImage(data: imageData)
+            self.activityIndicator.stopAnimating()
         }
 //        self.imageCocktailView.image = UIImage(data: viewModel.imageData ?? Data())
     }

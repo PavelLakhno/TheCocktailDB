@@ -10,6 +10,7 @@ import UIKit
 protocol CocktailDetailsDisplayLogic: AnyObject {
     func displayCocktailDetails(viewModel: CocktailDetails.ShowDetails.ViewModel)
     func displayFavoriteButtonStatus(viewModel: CocktailDetails.SetFavoriteStatus.ViewModel)
+    func displayImage(viewModel: CocktailDetails.ShowImage.ViewModel)
 }
 
 class CocktailDetailsViewController: UIViewController {
@@ -58,7 +59,6 @@ class CocktailDetailsViewController: UIViewController {
         return activIndicator
     }()
     
-//    var cocktail: Cocktail!
     var interactor: CocktailDetailsBusinessLogic?
     var router: (CocktailDetailsRoutingLogic & CocktailDetailsDataPassing)?
 
@@ -89,10 +89,10 @@ class CocktailDetailsViewController: UIViewController {
     
     private func passRequest() {
         interactor?.provideCocktailDetails()
+        interactor?.fetchImageCocktail()
     }
     
     // MARK: - Private Methods
-    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             imageCocktailView.heightAnchor.constraint(equalToConstant: 250),
@@ -123,10 +123,10 @@ class CocktailDetailsViewController: UIViewController {
 
 // MARK: - CourseDetailsDisplayLogic
 extension CocktailDetailsViewController: CocktailDetailsDisplayLogic {
+
     func displayCocktailDetails(viewModel: CocktailDetails.ShowDetails.ViewModel) {
         instructionLabel.text = viewModel.cocktailInstruction
         displayCocktailComposition(viewModel: viewModel)
-        imageCocktailView.image = UIImage(data: viewModel.imageURL)
         favoriteButton.tintColor = viewModel.isFavorite ? .red : .white
     }
     
@@ -165,5 +165,10 @@ extension CocktailDetailsViewController: CocktailDetailsDisplayLogic {
 
     func displayFavoriteButtonStatus(viewModel: CocktailDetails.SetFavoriteStatus.ViewModel) {
         favoriteButton.tintColor = viewModel.isFavorite ? .red : .white
+    }
+    
+    func displayImage(viewModel: CocktailDetails.ShowImage.ViewModel) {
+        imageCocktailView.image = UIImage(data: viewModel.imageURL)
+        activityIndicator.stopAnimating()
     }
 }

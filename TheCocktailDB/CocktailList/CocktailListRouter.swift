@@ -23,11 +23,9 @@ class CocktailListRouter: CocktailListRoutingLogic, CocktailListDataPassing {
         let destinationVC = CocktailDetailsViewController()
         var destinationDS = destinationVC.router?.dataStore
         destinationDS?.cocktail = dataStore?.cocktails[index]
-//        destinationDS = dataStore?.cocktails[index] as? any CocktailDetailsDataStore
-//        passDataToCocktailDetails(source: dataStore ?? CocktailListDataStore, destination: &((destinationDS) ?? CocktailDetailsDataStore))
-//        passDataToCocktailDetails(source: dataStore!, destination: &(destinationDS)!)
+        
         navigateToCocktailDetails(source: viewController, destination: destinationVC)
-        passDataToCocktailDetails(source: dataStore!, destination: &(destinationDS)!)
+        passDataToCocktailDetails(source: dataStore, destination: &destinationDS)
     }
     
     // MARK: Navigation
@@ -36,8 +34,8 @@ class CocktailListRouter: CocktailListRoutingLogic, CocktailListDataPassing {
     }
     
     // MARK: Passing data
-    func passDataToCocktailDetails(source: CocktailListDataStore, destination: inout CocktailDetailsDataStore) {
+    func passDataToCocktailDetails(source: CocktailListDataStore?, destination: inout CocktailDetailsDataStore?) {
         guard let indexPath = viewController?.tableView.indexPathForSelectedRow else { return }
-        destination.cocktail = source.cocktails[indexPath.row]
+        destination?.cocktail = source?.cocktails[indexPath.row]
     }
 }

@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-/*@objc*/ protocol CocktailDetailsRoutingLogic {
-    //func routeToSomewhere(segue: UIStoryboardSegue?)
+protocol CocktailDetailsRoutingLogic {
+
 }
 
 protocol CocktailDetailsDataPassing {

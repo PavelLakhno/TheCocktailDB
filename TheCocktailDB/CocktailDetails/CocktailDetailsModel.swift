@@ -15,7 +15,6 @@ enum CocktailDetails {
             let cocktailInstruction: String?
             let measures: [String?]
             let ingridients: [String?]
-            let imageURL: Data?
             let isFavorite: Bool
         }
         
@@ -23,7 +22,6 @@ enum CocktailDetails {
             let cocktailInstruction: String
             let measures: [String?]
             let ingridients: [String?]
-            let imageURL: Data
             let isFavorite: Bool
         }
     }
@@ -35,6 +33,16 @@ enum CocktailDetails {
         
         struct ViewModel {
             let isFavorite: Bool
+        }
+    }
+    
+    enum ShowImage {
+        struct Response {
+            let imageURL: Data?
+        }
+        
+        struct ViewModel {
+            let imageURL: Data
         }
     }
 }

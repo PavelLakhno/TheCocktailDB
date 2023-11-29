@@ -14,8 +14,8 @@ protocol CocktailCellViewModelProtocol {
     var height: Double { get }
     var cocktailName: String { get }
     var cocktailAlchohol: String { get }
-    var imageData: Data? { get }
     init(cocktail: Cocktail)
+    func fetchImageCocktail(completion: @escaping (Data) -> Void)
 }
 
 enum CocktailList {
@@ -44,14 +44,21 @@ enum CocktailList {
                     cocktail.strAlcoholic
                 }
                 
-                var imageData: Data? {
-                    NetworkManager.shared.fetchImageData(from: cocktail.strDrinkThumb)
-                }
-                
                 private let cocktail: Cocktail
                 
                 init(cocktail: Cocktail) {
                     self.cocktail = cocktail
+                }
+                
+                func fetchImageCocktail(completion: @escaping (Data) -> Void) {
+                    NetworkManager.shared.fetchImage(from: cocktail.strDrinkThumb) { result in
+                        switch result {
+                        case .success(let data):
+                            completion(data)
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
                 }
             }
             let rows: [CocktailCellViewModelProtocol]

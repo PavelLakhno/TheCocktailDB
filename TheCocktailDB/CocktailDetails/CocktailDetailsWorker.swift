@@ -8,8 +8,15 @@
 import Foundation
 
 class CocktailDetailsWorker {
-    func getImage(from imageURL: String?) -> Data? {
-        NetworkManager.shared.fetchImageData(from: imageURL)
+    func fetchImage(from imageURL: String?, completion: @escaping (Data) -> Void)   {
+        NetworkManager.shared.fetchImage(from: imageURL) {result in
+            switch result {
+            case .success(let data):
+                completion(data)
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     func getFavoriteStatus(for cocktailName: String) -> Bool {
@@ -19,5 +26,4 @@ class CocktailDetailsWorker {
     func setNewFavoriteStatus(for cocktailName: String, with status: Bool) {
         DataManager.shared.saveFavoriteStatus(for: cocktailName, with: status)
     }
-
 }
